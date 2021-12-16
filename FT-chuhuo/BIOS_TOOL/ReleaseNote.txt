@@ -1,0 +1,167 @@
+V1.3.05
+1. 修复klupdate工具的一个BUG：
+   现象为：--keepdmi选项不能生效（即加上该选项时，DMI数据区无法保留，仍然被刷新）。
+
+V1.3.04
+1. 针对FT-2500平台：
+   解决在“Kylin V10 (20210309)”版本上运行时，无法识别处理器平台的问题。
+2. 解决kldmi工具的一个BUG：
+   用--file=dmi.bin，选项时：如果dmi.bin长度不是4字节的倍数，会造成最后几个字节没有被写入FLASH。
+
+V1.3.03
+1. 解决kldmi工具在“Kylin V10 (Azalea)”版本上运行时，（概率性）提示“总线错误”的问题：
+硬件平台：S2500服务器
+OS版本：Linux localhost.localdomain 4.19.90-11.ky10.aarch64 #1 SMP Sat May 23 11:36:32 CST 2020 aarch64 aarch64 aarch64 GNU/Linux
+GLIBC版本：2.17
+问题：运行kldmi后，（概率性）提示“总线错误”。
+解决：基于V1.3.02版本的代码，重新编译。
+
+V1.3.02
+1. 针对LS3A5000平台，修改kldmi：
+   为了使得每一个DMI_DATA_RECORD中的Length（UINT16类型）地址在偶数地址边界上（否则BIOS读取Length会发生异常），kldmi创建DMI_DATA_RECORD时，将确保DMI_DATA_RECORD的长度按4字节对齐（不足部分进行补0）。
+
+V1.3.01
+1. 局部优化。
+
+V1.3.00
+1. 增加了对LS3A5000处理器的支持。
+
+V1.2.11
+1. 针对FT-D2000平台，为klupdate工具增加了选项：--reboot
+   如果运行klupdate时，附带--reboot选项，则更新成功后，将自动重启操作系统。
+
+V1.2.10
+1. 解决UOS系统下运行kldmi失败的问题：
+UOS版本：Linux uos-PC 4.19.0-arm64-server #3017 SMP Thu Nov 12 19:54:04 CST 2020 aarch64 GNU/Linux
+GLIBC版本：2.28
+问题：运行kldmi后，提示：Invalid argument.
+
+V1.2.09
+1. 修正了FT2000PLUS、FT2500、FT-D2000平台上与OS版本有关的一个BUG（和V1.2.01版本修复的BUG相同）。
+
+V1.2.08
+1. 修改klupdate工具
+   当BIOS镜像文件小于FLASH芯片容量的时候，剩余空间的处理方式：
+   1）默认情况下，剩余空间将被擦除；
+   2）增加了选项--keeprest，如果执行klupdate工具时，添加了该选项，则剩余空间将被保留。
+   注：去除了之前版本的一个选项：--clrspare。
+
+V1.2.07
+1. UOS升级后（版本号：Linux lenovo-PC 4.19.0-arm64-desktop #3018），CPU Model Name变为：D2000，之前版本为：D2000/8，造成工具无法匹配处理器平台，针对这个问题进行了修改。
+2. 去除kldmi工具对OS类型的检测。
+
+V1.2.06
+1. 增加功能：
+   1) 工具运行时，禁止命令行输入；
+   2) 只允许工具的一个实例被运行；
+   3) 屏蔽Ctrl+C、Ctrl+Z等信号。
+
+V1.2.05
+1. 针对FT-D2000平台，增加了对Spansion S25FS128S（及类似）芯片的支持。
+说明：
+S25FS128S芯片与W25Q256JV类似，第一个64KB空间包含了16个4KB的Sector，剩余的Sector大小都是64KB。
+2. klupdate工具：进行了部分优化。
+
+V1.2.04
+1. 针对FT2500平台，增加了对类似于W25Q256JV芯片的支持。
+说明：
+W25Q256JV芯片第一个和最后一个64KB空间，分别包含了16个4KB的Sector，剩余空间的Sector大小都是64KB。
+2. klupdate工具：增加了选项--clrspare，用于擦除FLASH芯片中的剩余空间。
+说明：
+假设FLASH芯片大小为16M（对于FT2500平台，klupdate默认FLASH大小为16MB），待更新的BIOS镜像文件大小为8MB：运行klupdate时，如果包含--clrspare选项，则执行完后，FLASH芯片中的8M～16M空间会被擦除;否则，这部分数据保持不变。
+
+V1.2.03
+1. 为kldmi工具（飞腾平台）增加了功能：
+   将smbios数据文件，刷入FLASH芯片中的DMI数据区域。
+   smbios数据文件由增加的选项指定：--file=SmbiosFile
+
+V1.2.02
+1. 对部分命令行选项参数的长度做了限制：
+   1）kldmi工具：各个Type字段的长度不能超过64字节；
+   2）文件路径（config文件、image文件等）的长度不能超过4096字节。
+
+V1.2.01
+1. 修正了FT2004平台上与OS版本（准确地说是C标准库）有关的一个BUG。
+
+V1.2.00
+1. 增加了对Phytium,D2000/8处理器的支持。
+注：
+1) 在Kylin V10系统下测试通过，OS版本信息：
+Linux lenovo-1-0-0 4.4.131-20201217.kylin.desktop-generic #kylin SMP Thu Dec 17 19:42:44 CST 2020 aarch64 aarch64 aarch64 GNU/Linux
+2) OS下用lscpu命令显示的处理器信息：
+Phytium,D2000/8
+
+V1.1.04
+1. 代码优化。
+
+V1.1.03
+1. 修改了部分错误的提示信息。
+
+V1.1.02
+1. 将更新失败后的重试次数改为6次（之前为3次）。
+
+V1.1.01
+1. 修正了工具执行完成后，给系统返回状态码功能的BUG。
+说明：当在shell脚本中调用klupdate,kldmi或klbootmgr工具后，可以通过命令返回值变量（即：$?）来判断工具执行是否成功。
+
+V1.1.00
+1. 增加了对主板上有多个（最多支持4个）FLASH芯片的情况的支持。
+2. 针对FT2500平台：
+1）运行klupdate更新BIOS时，默认情况下，，CPU1 BIOS和CPU2 BIOS都会被更新；
+2）运行klupdate更新BIOS时，如果加上--skipbios2选项，CPU2 BIOS将不被更新。
+
+V1.0.56
+1. 加入对FT2000Plus和FT2000/4的兼容支持。
+
+V1.0.55(FT2500)
+1. 增加了对FT2500处理器的支持。
+注：该版本仅仅支持FT2500处理器平台，不支持FT2000Plus和FT2000/4平台（后续版本会加入对FT2000Plus和FT2000/4的兼容支持）。
+
+V1.0.54
+1. 升级龙芯3A4000平台FlashLib。
+
+V1.0.53
+1. 将部分函数库改为静态链接。
+
+V1.0.52
+1. 龙芯平台BIOS中增加了对FLASH芯片的“写保护”操作，klutil工具在写、擦除FLASH芯片时，增加了去除“写保护”的操作。
+
+V1.0.51
+1. 修复检查OS版本的一个bug。
+
+V1.0.50
+1. 修复了龙芯平台kldmi工具的一个Bug。
+   Bug描述：针对特定版本的BIOS，使用kldmi工具修改TYPE 1/TYPE 2/TYPE 3数据时，会发生错误。
+
+V1.0.49
+1. 将龙芯平台FLASH芯片大小改为8M字节。
+
+V1.0.48
+1. 解决了部分龙芯机器更新BIOS慢的问题。
+
+V1.0.47
+1. 增加了数据校验功能：
+   1）kldmi、klbootmgr和klupdate中在将数据写入FLASH后，进行了校验。
+   2）klupdate中在将数据写入FLASH后，进行了校验。如果校验失败，则重新刷写并校验，并重试三次。
+   
+V1.0.46
+1. 修复在UOS系统下，UUID数据格式存在的问题。
+
+V1.0.45
+1. 优化和修复部分bug。
+
+V1.0.44
+1. 增加了选项：--plat=PLATFORM。
+
+V1.0.43
+1. 增加了支持的OS版本。
+
+V1.0.42
+1. 优化和修复部分bug。
+
+V1.0.41
+1. kldmi 工具增加 --uuid=auto选项，支持自动生成UUID；
+2. 将FT2000/4和FT2000PLUS两个平台的版本合并为一个；
+3. 增加了对OS版本的检测；
+4. 优化和修复部分bug。
+
